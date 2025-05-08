@@ -1,24 +1,45 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
-import {Button} from '../components'
 function App() {
-  const [count, setCount] = useState(0)
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
-  //batching
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+      if (!response.ok) {
+        throw new Error("Error al obtener los datos ")
+      }
+      const jsonData = await response.json()
 
-  const countMore = () => {
-    setCount ((count) => count + 1)
-    setCount ((count) => count + 1)
-    setCount ((count) => count + 1)
-    setCount ((count) => count + 1)
-    setCount ((count) => count + 1)
+      setData(jsonData)
+    } catch (e) {
+      setError(e as string)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+
+  }, [])
+
+  if (loading) {
+    return <div>Cargando...</div>
+  }
+
+  if (error) {
+
+    return <div>Hay un error {error}</div>
   }
 
   return (
-    <>
-    <Button label={'Contador es : ' + count} parentMethod={countMore} />
-    </>
+    <div>{JSON.stringify(data)}</div>
   )
+
 }
 
 export default App
