@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import './App.css'
-
-
+import {Button} from '../components'
 function App() {
   const [count, setCount] = useState(0)
+
+  const countMore = () => {
+    setCount ((count) => count + 1)
+  }
+
   return (
     <>
-        <button className="custom-button" onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+    <Button label={'Contador es : ' + count} parentMethod={countMore} />
     </>
   )
 }
