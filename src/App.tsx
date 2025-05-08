@@ -1,39 +1,24 @@
-import { useEffect, useState } from 'react'
 import './App.css'
+import { useFetch } from '../hooks'
+
+const url = 'https://jsonplaceholder.typicode.com/posts'
+
+interface Data {
+  name: string;
+  lastName: string;
+  age: number;
+}
+
 function App() {
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
 
-  const fetchData = async () => {
-    setLoading(true)
-    try {
-      const response = await fetch('https://jsonplaceholder.typicode.com/posts')
-      if (!response.ok) {
-        throw new Error("Error al obtener los datos ")
-      }
-      const jsonData = await response.json()
-
-      setData(jsonData)
-    } catch (e) {
-      setError(e as string)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchData()
-
-  }, [])
+  const { data, loading, error } = useFetch<Data>(url)
 
   if (loading) {
     return <div>Cargando...</div>
   }
 
   if (error) {
-
-    return <div>Hay un error {error}</div>
+    return <div>.Error en el llamado {error.message}</div>
   }
 
   return (
